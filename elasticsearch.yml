@@ -1,0 +1,42 @@
+# Cluster Settings
+name: docker-instance
+cluster:
+  name: docker-cluster
+
+network:
+  host: 0.0.0.0
+node:
+  data: true
+gateway:
+ recover_after_nodes: 1
+ recover_after_time: 5m
+ expected_nodes: 1
+http:
+  enabled: true
+store:
+  memory:
+    buffer_size: 10k
+    cache_size: 100m
+  type: memory
+index:
+  number_of_replicas: 1
+  number_of_shards: 1
+  analysis:
+    analyzer:
+      standard:
+        type: standard
+      snowball:
+        alias: [ searchField ]
+        language: English
+        type: snowball
+      string_lc:
+        tokenizer: keyword
+        filter: lowercase
+      state_province_lc:
+        tokenizer: keyword
+        filter: [ lowercase, state_province_synonyms ]
+    filter:
+      state_province_synonyms:
+        type: synonym
+        ignore_case: true
+        synonyms_path: "stateProvinceSynonyms.txt"
